@@ -6,7 +6,7 @@ import { shadowStyle, alignItemsMap, getTouchableComponent, isAndroid, touchable
 export default class ActionButton extends Component {
   constructor(props) {
     super(props);
-
+    this.isOpened=false;
     this.state = {
       resetToken: props.resetToken,
       active: props.active,
@@ -75,9 +75,10 @@ export default class ActionButton extends Component {
   //////////////////////
 
   render() {
+    var viewPointerEvent = this.isOpened?undefined:'none';
     return (
       <View pointerEvents="box-none" style={this.getOverlayStyles()}>
-        <Animated.View pointerEvents="none" style={[this.getOverlayStyles(), {
+        <Animated.View pointerEvents={viewPointerEvent} style={[this.getOverlayStyles(), {
           backgroundColor: this.props.bgColor,
           opacity: this.anim.interpolate({
             inputRange: [0, 1],
@@ -141,8 +142,15 @@ export default class ActionButton extends Component {
           activeOpacity={this.props.activeOpacity}
           onLongPress={this.props.onLongPress}
           onPress={() => {
-            this.props.onPress()
-            if (this.props.children) this.animateButton()
+            this.isOpened = !this.isOpened;
+
+            return new Promise(function (resolve, reject) {
+              this.props.onPress()
+              resolve(undefined);
+            }.bind(this)).then(function(){
+            if (this.props.children) this.animateButton();
+            }.bind(this));
+
           }}>
           <Animated.View style={[wrapperStyle, !this.props.hideShadow && shadowStyle]}>
             <Animated.View style={[buttonStyle, animatedViewStyle]}>
@@ -159,6 +167,7 @@ export default class ActionButton extends Component {
     if (icon) return icon;
 
     const textColor = buttonTextStyle.color || 'rgba(255,255,255,1)'
+      var text = buttonText || '+';
 
     return (
       <Animated.Text style={[styles.btnText, buttonTextStyle, {
@@ -166,15 +175,15 @@ export default class ActionButton extends Component {
           inputRange: [0, 1],
           outputRange: [textColor, (btnOutRangeTxt || textColor)]
         })
-      }]}>
-        {buttonText}
-      </Animated.Text>
+      },this.props.buttonStyle]}>
+          {text}
+        </Animated.Text>
     )
   }
 
   _renderActions() {
     const { children, verticalOrientation } = this.props;
-    
+
     if (!this.state.active) return null;
 
     const actionButtons = !Array.isArray(children) ? [children] : children;
@@ -238,6 +247,7 @@ export default class ActionButton extends Component {
   }
 
   reset(animate=true) {
+    this.isOpened = false;
     if (this.props.onReset) this.props.onReset();
 
     if (animate) {
