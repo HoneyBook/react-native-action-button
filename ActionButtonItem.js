@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react';
-import { StyleSheet, Text, View, Animated, 
+import { StyleSheet, Text, View, Animated,
   TouchableNativeFeedback, TouchableWithoutFeedback, Dimensions, Platform } from 'react-native';
 import { shadowStyle, alignItemsMap, getTouchableComponent, isAndroid, touchableBackground, DEFAULT_ACTIVE_OPACITY } from './shared';
 
@@ -84,7 +84,7 @@ export default class ActionButtonItem extends Component {
     if (!this.props.title) return null;
 
     const { textContainerStyle, hideShadow, offsetX, parentSize, size, position, spaceBetween } = this.props;
-    const offsetTop = Math.max((size / 2) - (TEXT_HEIGHT/2), 0);
+    const offsetTop = Math.max((size / 2) - ((textContainerStyle.height?textContainerStyle.height:TEXT_HEIGHT)/2), 0);
     const positionStyles = { top: offsetTop };
 
     if (position !== 'center') {
