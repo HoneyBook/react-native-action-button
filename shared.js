@@ -3,7 +3,7 @@ import { Platform, TouchableOpacity, TouchableNativeFeedback } from 'react-nativ
 export const DEFAULT_ACTIVE_OPACITY = 0.85;
 
 export const shadowStyle = {
-  shadowOpacity: 0.35,
+  shadowOpacity: 0.14,
   shadowOffset: {
     width: 0, height: 5,
   },
