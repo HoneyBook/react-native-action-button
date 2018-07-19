@@ -21,6 +21,7 @@ import {
 export default class ActionButton extends Component {
   constructor(props) {
     super(props);
+      this._onPress = this._onPress.bind(this)
     this.isOpened=false;
     this.state = {
       resetToken: props.resetToken,
@@ -87,6 +88,22 @@ export default class ActionButton extends Component {
           : "flex-start"
       }
     ];
+  }
+
+  imitatePress(){
+      this._onPress();
+  }
+
+  _onPress(){
+      this.isOpened = !this.isOpened;
+
+      return new Promise(function (resolve, reject) {
+          this.props.onPress()
+          resolve(undefined);
+      }.bind(this)).then(function(){
+          if (this.props.children) this.animateButton();
+      }.bind(this));
+
   }
 
   //////////////////////
@@ -194,17 +211,7 @@ export default class ActionButton extends Component {
           )}
           activeOpacity={this.props.activeOpacity}
           onLongPress={this.props.onLongPress}
-          onPress={() => {
-            this.isOpened = !this.isOpened;
-
-            return new Promise(function (resolve, reject) {
-              this.props.onPress()
-              resolve(undefined);
-            }.bind(this)).then(function(){
-            if (this.props.children) this.animateButton();
-            }.bind(this));
-
-          }}
+          onPress={this._onPress}
           onPressIn={this.props.onPressIn}
           onPressOut={this.props.onPressOut}>
           <Animated.View style={[wrapperStyle, !this.props.hideShadow && shadowStyle]}>
@@ -339,7 +346,7 @@ ActionButton.propTypes = {
   bgColor: PropTypes.string,
   bgOpacity: PropTypes.number,
   buttonColor: PropTypes.string,
-  buttonTextStyle: ViewPropTypes.style,
+  // buttonTextStyle: ViewPropTypes.style,
   buttonText: PropTypes.string,
 
   offsetX: PropTypes.number,
