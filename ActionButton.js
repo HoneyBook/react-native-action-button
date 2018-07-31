@@ -301,7 +301,7 @@ export default class ActionButton extends Component {
     if (this.state.active) return this.reset();
 
     if (animate) {
-      Animated.spring(this.anim, { toValue: 1 }).start();
+      Animated.spring(this.anim, { toValue: 1, tension: 15, }).start();
     } else {
       this.anim.setValue(1);
     }
